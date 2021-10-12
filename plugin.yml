@@ -1,0 +1,26 @@
+---
+name: Vault Environment
+description: Inject Vault secrets into the environment
+author: https://github.com/grapl-security
+requirements: ["docker"]
+configuration:
+  properties:
+    image:
+      description: The `vault` image to use; defaults to `hashicorp/envconsul`.
+      type: string
+    tag:
+      description: The `vault` image tag to use; defaults to `latest`
+      type: string
+    address:
+      description: The address of the Vault server to interact with. Should include protocol, server, and port (corresponds to 'VAULT_ADDR').
+      type: string
+    namespace:
+      description: The Vault namespace to interact with (corresponds to 'VAULT_NAMESPACE').
+      type: string
+    secrets:
+      description: A list of secrets to inject into the environment
+      type: array
+    secret_prefix:
+      description: Path fragment to prepend to all secrets. Defaults to the empty string.
+      type: string
+  additionalProperties: false
