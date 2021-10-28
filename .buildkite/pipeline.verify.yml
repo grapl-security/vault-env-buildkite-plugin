@@ -18,81 +18,81 @@ steps:
   - label: ":buildkite::vault: Run Plugin 1"
     command: echo 'Hello World'
     plugins:
-      - "ssh://git@github.com/grapl-security/vault-login-buildkite-plugin#72a5d02":
+      - "grapl-security/vault-login#v0.1.0":
           # These two can be set globally before the vault-login plugin is invoked
           namespace: "admin/buildkite"
           address: "https://vault-cluster.private.vault.b3b89729-5226-4b15-8c8a-b42572e88e7c.aws.hashicorp.cloud:8200"
-      - "ssh://git@github.com/grapl-security/vault-env-buildkite-plugin#${BUILDKITE_COMMIT}":
+      - "grapl-security/vault-env#${BUILDKITE_COMMIT}":
           namespace: "admin/buildkite"
           address: "https://vault-cluster.private.vault.b3b89729-5226-4b15-8c8a-b42572e88e7c.aws.hashicorp.cloud:8200"
           secrets:
-            - secret/data/buildkite/env/TOOLCHAIN_AUTH_TOKEN
-            - secret/data/buildkite/env/CLOUDSMITH_TOKEN
+            - secret/data/buildkite/env/vault-env-buildkite-plugin/TOOLCHAIN_AUTH_TOKEN
+            - secret/data/buildkite/env/CLOUDSMITH_API_KEY
     agents:
-      queue: "docker/cm-testing"
-
+      queue: "docker"
 
   - label: ":buildkite::vault: Run Plugin 2"
     command: echo 'Hello World'
     plugins:
-      - "ssh://git@github.com/grapl-security/vault-login-buildkite-plugin#72a5d02":
+      - "grapl-security/vault-login#v0.1.0":
           # These two can be set globally before the vault-login plugin is invoked
           namespace: "admin/buildkite"
           address: "https://vault-cluster.private.vault.b3b89729-5226-4b15-8c8a-b42572e88e7c.aws.hashicorp.cloud:8200"
-      - "ssh://git@github.com/grapl-security/vault-env-buildkite-plugin#${BUILDKITE_COMMIT}":
+      - "grapl-security/vault-env#${BUILDKITE_COMMIT}":
           namespace: "admin/buildkite"
           address: "https://vault-cluster.private.vault.b3b89729-5226-4b15-8c8a-b42572e88e7c.aws.hashicorp.cloud:8200"
           secret_prefix: secret/data/buildkite
           secrets:
-            - env/TOOLCHAIN_AUTH_TOKEN
-            - env/CLOUDSMITH_TOKEN
+            - env/vault-env-buildkite-plugin/TOOLCHAIN_AUTH_TOKEN
+            - env/CLOUDSMITH_API_KEY
     agents:
-      queue: "docker/cm-testing"
+      queue: "docker"
 
   - label: ":buildkite::vault: Run Plugin 3"
     command: echo 'Hello World'
     plugins:
-      - "ssh://git@github.com/grapl-security/vault-login-buildkite-plugin#72a5d02":
+      - "grapl-security/vault-login#v0.1.0":
           # These two can be set globally before the vault-login plugin is invoked
           namespace: "admin/buildkite"
           address: "https://vault-cluster.private.vault.b3b89729-5226-4b15-8c8a-b42572e88e7c.aws.hashicorp.cloud:8200"
-      - "ssh://git@github.com/grapl-security/vault-env-buildkite-plugin#${BUILDKITE_COMMIT}":
+      - "grapl-security/vault-env#${BUILDKITE_COMMIT}":
           namespace: "admin/buildkite"
           address: "https://vault-cluster.private.vault.b3b89729-5226-4b15-8c8a-b42572e88e7c.aws.hashicorp.cloud:8200"
           secret_prefix: secret/data/buildkite/env
           secrets:
-            - TOOLCHAIN_AUTH_TOKEN
-            - CLOUDSMITH_TOKEN
+            - vault-env-buildkite-plugin/TOOLCHAIN_AUTH_TOKEN
+            - CLOUDSMITH_API_KEY
     agents:
-      queue: "docker/cm-testing"
+      queue: "docker"
 
   - label: ":buildkite::vault: Run Plugin 4"
     command: echo 'Hello World'
     plugins:
-      - "ssh://git@github.com/grapl-security/vault-login-buildkite-plugin#72a5d02":
+      - "grapl-security/vault-login#v0.1.0":
           # These two can be set globally before the vault-login plugin is invoked
           namespace: "admin/buildkite"
           address: "https://vault-cluster.private.vault.b3b89729-5226-4b15-8c8a-b42572e88e7c.aws.hashicorp.cloud:8200"
-      - "ssh://git@github.com/grapl-security/vault-env-buildkite-plugin#${BUILDKITE_COMMIT}":
+      - "grapl-security/vault-env#${BUILDKITE_COMMIT}":
           secret_prefix: secret/data/buildkite/env/
           secrets:
-            - TOOLCHAIN_AUTH_TOKEN
-            - CLOUDSMITH_TOKEN
+            - vault-env-buildkite-plugin/TOOLCHAIN_AUTH_TOKEN
+            - CLOUDSMITH_API_KEY
     agents:
-      queue: "docker/cm-testing"
+      queue: "docker"
+
   - label: ":buildkite::vault: Run Plugin 5"
     command: echo 'Hello World'
     plugins:
-      - "ssh://git@github.com/grapl-security/vault-login-buildkite-plugin#72a5d02":
+      - "grapl-security/vault-login#v0.1.0":
           # These two can be set globally before the vault-login plugin is invoked
           namespace: "admin/buildkite"
           address: "https://vault-cluster.private.vault.b3b89729-5226-4b15-8c8a-b42572e88e7c.aws.hashicorp.cloud:8200"
-      - "ssh://git@github.com/grapl-security/vault-env-buildkite-plugin#${BUILDKITE_COMMIT}":
+      - "grapl-security/vault-env#${BUILDKITE_COMMIT}":
           secret_prefix: secret/data/buildkite/env/
           secrets:
-            - CLOUDSMITH_TOKEN
-      - "ssh://git@github.com/grapl-security/vault-env-buildkite-plugin#${BUILDKITE_COMMIT}":
+            - CLOUDSMITH_API_KEY
+      - "grapl-security/vault-env#${BUILDKITE_COMMIT}":
           secrets:
-            - secret/data/buildkite/env/TOOLCHAIN_AUTH_TOKEN
+            - secret/data/buildkite/env/vault-env-buildkite-plugin/TOOLCHAIN_AUTH_TOKEN
     agents:
-      queue: "docker/cm-testing"
+      queue: "docker"
