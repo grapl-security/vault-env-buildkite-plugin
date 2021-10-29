@@ -5,6 +5,11 @@ steps:
   - label: ":lint-roller::bash: Lint Bash"
     command:
       - make lint-bash
+    plugins:
+      - grapl-security/vault-login#v0.1.0
+      - grapl-security/vault-env#v0.1.0:
+          secrets:
+            - secret/data/buildkite/env/vault-env-buildkite-plugin/TOOLCHAIN_AUTH_TOKEN
 
   - label: ":lint-roller::buildkite: Lint Plugin"
     command:
