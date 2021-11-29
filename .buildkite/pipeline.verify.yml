@@ -2,9 +2,9 @@ env:
   PANTS_CONFIG_FILES: "['pants.toml', 'pants.ci.toml']"
 
 steps:
-  - label: ":lint-roller::bash: Lint Bash"
+  - label: ":lint-roller::bash: Lint Shell"
     command:
-      - make lint-bash
+      - make lint-shell
     plugins:
       - grapl-security/vault-login#v0.1.0
       - grapl-security/vault-env#v0.1.0:

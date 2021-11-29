@@ -4,24 +4,24 @@ COMPOSE_USER=$(shell id -u):$(shell id -g)
 ########################################################################
 
 .PHONY: lint
-lint: lint-plugin lint-bash
+lint: lint-plugin lint-shell
 
 .PHONY: lint-plugin
 lint-plugin:
 	docker-compose run --rm plugin-linter
 
-.PHONY: lint-bash
-lint-bash:
+.PHONY: lint-shell
+lint-shell:
 	./pants lint ::
 
 # Formatting
 ########################################################################
 
 .PHONY: format
-format: format-bash
+format: format-shell
 
-.PHONY: format-bash
-format-bash:
+.PHONY: format-shell
+format-shell:
 	./pants fmt ::
 
 # Testing
