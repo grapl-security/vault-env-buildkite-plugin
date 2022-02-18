@@ -6,7 +6,7 @@ steps:
     command:
       - make lint-shell
     plugins:
-      - grapl-security/vault-login#v0.1.0
+      - grapl-security/vault-login#v0.1.2
       - grapl-security/vault-env#v0.1.0:
           secrets:
             - secret/data/buildkite/env/vault-env-buildkite-plugin/TOOLCHAIN_AUTH_TOKEN
@@ -23,7 +23,7 @@ steps:
   - label: ":buildkite::vault: Run Plugin 1"
     command: echo 'Hello World'
     plugins:
-      - "grapl-security/vault-login#v0.1.0":
+      - "grapl-security/vault-login#v0.1.2":
           # These two can be set globally before the vault-login plugin is invoked
           namespace: "admin/buildkite"
           address: "https://vault-cluster.private.vault.b3b89729-5226-4b15-8c8a-b42572e88e7c.aws.hashicorp.cloud:8200"
@@ -39,7 +39,7 @@ steps:
   - label: ":buildkite::vault: Run Plugin 2"
     command: echo 'Hello World'
     plugins:
-      - "grapl-security/vault-login#v0.1.0":
+      - "grapl-security/vault-login#v0.1.2":
           # These two can be set globally before the vault-login plugin is invoked
           namespace: "admin/buildkite"
           address: "https://vault-cluster.private.vault.b3b89729-5226-4b15-8c8a-b42572e88e7c.aws.hashicorp.cloud:8200"
@@ -56,7 +56,7 @@ steps:
   - label: ":buildkite::vault: Run Plugin 3"
     command: echo 'Hello World'
     plugins:
-      - "grapl-security/vault-login#v0.1.0":
+      - "grapl-security/vault-login#v0.1.2":
           # These two can be set globally before the vault-login plugin is invoked
           namespace: "admin/buildkite"
           address: "https://vault-cluster.private.vault.b3b89729-5226-4b15-8c8a-b42572e88e7c.aws.hashicorp.cloud:8200"
@@ -73,7 +73,7 @@ steps:
   - label: ":buildkite::vault: Run Plugin 4"
     command: echo 'Hello World'
     plugins:
-      - "grapl-security/vault-login#v0.1.0":
+      - "grapl-security/vault-login#v0.1.2":
           # These two can be set globally before the vault-login plugin is invoked
           namespace: "admin/buildkite"
           address: "https://vault-cluster.private.vault.b3b89729-5226-4b15-8c8a-b42572e88e7c.aws.hashicorp.cloud:8200"
@@ -88,7 +88,7 @@ steps:
   - label: ":buildkite::vault: Run Plugin 5"
     command: echo 'Hello World'
     plugins:
-      - "grapl-security/vault-login#v0.1.0":
+      - "grapl-security/vault-login#v0.1.2":
           # These two can be set globally before the vault-login plugin is invoked
           namespace: "admin/buildkite"
           address: "https://vault-cluster.private.vault.b3b89729-5226-4b15-8c8a-b42572e88e7c.aws.hashicorp.cloud:8200"
