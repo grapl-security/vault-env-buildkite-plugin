@@ -2,6 +2,10 @@ env:
   PANTS_CONFIG_FILES: "['pants.toml', 'pants.ci.toml']"
 
 steps:
+  - label: ":jeans: All files are covered by Pants"
+    command:
+      - ./pants tailor --check
+
   - label: ":lint-roller::bash: Lint Shell"
     command:
       - make lint-shell
