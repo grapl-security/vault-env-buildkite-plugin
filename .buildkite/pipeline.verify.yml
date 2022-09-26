@@ -2,7 +2,7 @@ env:
   PANTS_CONFIG_FILES: "['pants.toml', 'pants.ci.toml']"
 
 steps:
-  - label: ":jeans: All files are covered by Pants"
+  - label: ":pants: All files are covered by Pants"
     command:
       - ./pants tailor --check
 
@@ -19,10 +19,9 @@ steps:
     command:
       - make lint-plugin
 
-  # TODO: Add some unit tests!
-  # - label: ":lint-roller::buildkite: Test Plugin"
-  #   command:
-  #     - make test-plugin
+  - label: ":lint-roller::buildkite: Test Plugin"
+    command:
+      - make test-plugin
 
   - label: ":buildkite::vault: Run Plugin 1"
     command: echo 'Hello World'

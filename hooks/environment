@@ -2,6 +2,9 @@
 
 set -euo pipefail
 
+# shellcheck source-path=SCRIPTDIR
+source "$(dirname "${BASH_SOURCE[0]}")/../lib/log.sh"
+
 readonly default_image="hashicorp/envconsul"
 readonly default_tag="latest"
 readonly image="${BUILDKITE_PLUGIN_VAULT_ENV_IMAGE:-${default_image}}:${BUILDKITE_PLUGIN_VAULT_ENV_TAG:-${default_tag}}"
@@ -9,8 +12,7 @@ readonly image="${BUILDKITE_PLUGIN_VAULT_ENV_IMAGE:-${default_image}}:${BUILDKIT
 # Fail if there is no Vault token; gotta log in first
 ########################################################################
 if [ -z "${VAULT_TOKEN:-}" ]; then
-    echo "--- :skull_and_crossbones: Could not find 'VAULT_TOKEN' in the environment!"
-    exit 1
+    raise_error "Could not find 'VAULT_TOKEN' in the environment!"
 fi
 
 # Resolve Vault address
@@ -20,8 +22,7 @@ if [ -n "${BUILDKITE_PLUGIN_VAULT_ENV_ADDRESS:-}" ]; then
     export VAULT_ADDR
 fi
 if [ -z "${VAULT_ADDR:-}" ]; then
-    echo "--- :skull_and_crossbones: Could not find 'VAULT_ADDR' in the environment, and 'BUILDKITE_PLUGIN_VAULT_ENV_ADDRESS' was not specified!"
-    exit 1
+    raise_error "Could not find 'VAULT_ADDR' in the environment, and 'BUILDKITE_PLUGIN_VAULT_ENV_ADDRESS' was not specified!"
 fi
 
 # Resolve Vault namespace
@@ -31,8 +32,7 @@ if [ -n "${BUILDKITE_PLUGIN_VAULT_ENV_NAMESPACE:-}" ]; then
     export VAULT_NAMESPACE
 fi
 if [ -z "${VAULT_NAMESPACE:-}" ]; then
-    echo "--- :skull_and_crossbones: Could not find 'VAULT_NAMESPACE' in the environment, and 'BUILDKITE_PLUGIN_VAULT_ENV_NAMESPACE' was not specified!"
-    exit 1
+    raise_error "Could not find 'VAULT_NAMESPACE' in the environment, and 'BUILDKITE_PLUGIN_VAULT_ENV_NAMESPACE' was not specified!"
 fi
 
 # Resolve secret prefix
@@ -45,9 +45,8 @@ if [[ -n "${secret_prefix}" && ! "${secret_prefix}" =~ /$ ]]; then
 fi
 readonly secret_prefix
 
+# Resolve secrets
 ########################################################################
-
-readonly container_name="vault-env-plugin-${BUILDKITE_JOB_ID}"
 
 # STOLEN FROM https://github.com/buildkite-plugins/docker-buildkite-plugin/blob/9f90d8ef742d9fa1eb3556720e16f2b842ff1cb2/hooks/command#L25-L47
 #
@@ -61,8 +60,7 @@ plugin_read_list_into_result() {
         local parameter="${prefix}_${i}"
 
         if [[ -n "${!prefix:-}" ]]; then
-            echo ":rotating_light: Plugin received a string for $prefix, expected an array" >&2
-            exit 1
+            raise_error "Plugin received a string for $prefix, expected an array"
         fi
 
         while [[ -n "${!parameter:-}" ]]; do
@@ -75,24 +73,32 @@ plugin_read_list_into_result() {
     [[ ${#result[@]} -gt 0 ]] || return 1
 }
 
-envconsul_env() {
-    # This populates a `result` array for later use
-    plugin_read_list_into_result BUILDKITE_PLUGIN_VAULT_ENV_SECRETS
+secrets=()
+if plugin_read_list_into_result BUILDKITE_PLUGIN_VAULT_ENV_SECRETS; then
+    secrets=("${result[@]}")
+else
+    raise_error "At least one secret must be specified!"
+fi
 
-    secrets=()
-    for secret in "${result[@]}"; do
+########################################################################
+
+readonly container_name="vault-env-plugin-${BUILDKITE_JOB_ID}"
+
+envconsul_env() {
+    secret_args=()
+    for secret in "${secrets[@]}"; do
         # secret_prefix is guaranteed to end with a / if it is non-empty
-        secrets+=("-secret=${secret_prefix}${secret}")
+        secret_args+=("-secret=${secret_prefix}${secret}")
     done
 
     # Explicitly *not* using `--rm` so we can output the container
     # logs in case of a failure.
-    docker run \
+    log_and_run docker run \
         --env VAULT_TOKEN \
         --name="${container_name}" \
         -- \
         "${image}" \
-        "${secrets[@]}" \
+        "${secret_args[@]}" \
         -once \
         -upcase \
         -pristine \
@@ -105,15 +111,15 @@ envconsul_env() {
 }
 
 cleanup() {
-    docker container rm --force "${container_name}" > /dev/null 2>&1
+    log_and_run docker container rm --force "${container_name}" > /dev/null 2>&1
 }
 
 trap cleanup EXIT INT QUIT
 
-echo "--- :vault: Pulling secrets from Vault"
-echo "Using Docker image: ${image}"
-echo "VAULT_ADDR=${VAULT_ADDR}"
-echo "VAULT_NAMESPACE=${VAULT_NAMESPACE}"
+log "--- :vault: Pulling secrets from Vault"
+log "Using Docker image: ${image}"
+log "VAULT_ADDR=${VAULT_ADDR}"
+log "VAULT_NAMESPACE=${VAULT_NAMESPACE}"
 
 if vault_env=$(envconsul_env); then
     set -o allexport
@@ -121,7 +127,7 @@ if vault_env=$(envconsul_env); then
     set +o allexport
 else
     retval=$?
-    echo "--- :skull_and_crossbones: Failed to retrieve secrets from Vault"
-    docker container logs "${container_name}"
+    log "--- :skull_and_crossbones: Failed to retrieve secrets from Vault"
+    log_and_run docker container logs "${container_name}"
     exit ${retval}
 fi
