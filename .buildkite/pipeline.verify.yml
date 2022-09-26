@@ -2,7 +2,7 @@ env:
   PANTS_CONFIG_FILES: "['pants.toml', 'pants.ci.toml']"
 
 steps:
-  - label: ":jeans: All files are covered by Pants"
+  - label: ":pants: All files are covered by Pants"
     command:
       - ./pants tailor --check
 
