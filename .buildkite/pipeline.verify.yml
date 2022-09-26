@@ -19,10 +19,9 @@ steps:
     command:
       - make lint-plugin
 
-  # TODO: Add some unit tests!
-  # - label: ":lint-roller::buildkite: Test Plugin"
-  #   command:
-  #     - make test-plugin
+  - label: ":lint-roller::buildkite: Test Plugin"
+    command:
+      - make test-plugin
 
   - label: ":buildkite::vault: Run Plugin 1"
     command: echo 'Hello World'
