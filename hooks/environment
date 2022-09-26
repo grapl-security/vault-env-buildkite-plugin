@@ -85,10 +85,10 @@ fi
 readonly container_name="vault-env-plugin-${BUILDKITE_JOB_ID}"
 
 envconsul_env() {
-    args=()
+    secret_args=()
     for secret in "${secrets[@]}"; do
         # secret_prefix is guaranteed to end with a / if it is non-empty
-        args+=("-secret=${secret_prefix}${secret}")
+        secret_args+=("-secret=${secret_prefix}${secret}")
     done
 
     # Explicitly *not* using `--rm` so we can output the container
@@ -98,7 +98,7 @@ envconsul_env() {
         --name="${container_name}" \
         -- \
         "${image}" \
-        "${args[@]}" \
+        "${secret_args[@]}" \
         -once \
         -upcase \
         -pristine \
