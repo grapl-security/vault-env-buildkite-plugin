@@ -42,8 +42,8 @@ uses.
 steps:
   - command: make test
     plugins:
-      - grapl-security/vault-login#v0.1.0
-      - grapl-security/vault-env#v0.1.0:
+      - grapl-security/vault-login#v0.1.3
+      - grapl-security/vault-env#v0.2.0:
         secrets:
           - secret/data/buildkite/env/FOO_TOKEN
 ```
@@ -52,8 +52,8 @@ steps:
 steps:
   - command: make test
     plugins:
-      - grapl-security/vault-login#v0.1.0:
-      - grapl-security/vault-env#v0.1.0:
+      - grapl-security/vault-login#v0.1.3
+      - grapl-security/vault-env#v0.2.0:
         secret_prefix: secret/data/buildkite/env
         secrets:
           - FOO_TOKEN
